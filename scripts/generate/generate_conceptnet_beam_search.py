@@ -63,8 +63,10 @@ opt.train.dynamic.epoch = 0
 
 print("Loading Data")
 
+if "maxr" not in opt.data.keys():
+    opt.data.maxr = 5 if opt.data.rel == "language" else 1
 path = "data/conceptnet/processed/generation/{}.pickle".format(
-        utils.make_name_string(opt.data))
+    utils.make_name_string(opt.data))
 
 data_loader = data.make_data_loader(opt)
 loaded = data_loader.load_data(path)
@@ -115,7 +117,7 @@ print(opt.exp)
 model = models.make_model(
     opt, n_vocab, n_ctx, 0, load=False, return_acts=True, return_probs=False)
 
-model.load_state_dict(model_stuff["state_dict"])
+models.load_state_dict(model, model_stuff["state_dict"])
 
 if config.gpu_mode:
     print("Pushing to GPU: {}".format(config.gpu_index))
